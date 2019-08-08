@@ -4,7 +4,7 @@ sudo rm -r mnist_convnet_model
 source activate tensorflow_p36
 
 
-mpi_command="/home/ubuntu/anaconda3/envs/tensorflow_p36/bin/mpirun -np 16 -H localhost:8  \
+mpi_command="/home/ubuntu/anaconda3/envs/tensorflow_p36/bin/mpirun -np 8 -H localhost:8  \
 --allow-run-as-root -bind-to none -map-by slot \
 -x NCCL_DEBUG=INFO \
 -x LD_LIBRARY_PATH \
