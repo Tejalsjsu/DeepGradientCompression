@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from DeepGradientCompressionOptimizer import DeepGradientCompressionOptimizer
 
 import os
 import errno
@@ -117,12 +118,21 @@ def cnn_model_fn(features, labels, mode):
         # Horovod: add Horovod Distributed Optimizer.
         optimizer = hvd.DistributedOptimizer(optimizer)
 
-        train_op = optimizer.minimize(
-            loss=loss,
-            global_step=tf.train.get_global_step())
-        return tf.estimator.EstimatorSpec(mode=mode, loss=loss,
-                                          train_op=train_op)
+        # wrap DeepGradientCompressionOptimizer around horovod Optimizer
+        optimizer = DeepGradientCompressionOptimizer(optimizer)
 
+
+        #train_op = optimizer.minimize(
+        #    loss=loss,
+        #    global_step=tf.train.get_global_step())
+        #return tf.estimator.EstimatorSpec(mode=mode, loss=loss,
+        #                                  train_op=train_op)
+
+        grads_and_vars = optimizer.compute_gradients(loss, tvars)
+        grads_and_vars = [(g,v) for g,v in grads_and_vars if g is not None]
+        grads_and_vars = optimizer.sparse_to_dense(grads_and_vars)
+        grads, tvars = list(zip(*grads_and_vars))
+        train_op = optimizer.apply_gradients(list(zip(grads, tvars)), global_step=tf.train.get_or_create_global_step())
     # Add evaluation metrics (for EVAL mode)
     eval_metric_ops = {
         "accuracy": tf.metrics.accuracy(
