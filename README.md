@@ -49,3 +49,36 @@ Multi Node - MNIST 2 nodes
   0.2	          | 0.9452	 | 0.1918  |
   0.1	          | 0.2385	 | 2.2694  |
   0 (Send None) |	0.1386	 | 2.2822  |
+  
+  
+ The Library –
+ 
+DeepGradientCompression optimizer wraps around tf.train.optimizer, which is the base class for optimizers. It overrides methods compute_gradients and apply_gradients. 
+**compute_gradients** – gradients are computed using this method. It returns a list of (gradient, variable) pairs where "gradient" is the gradient for "variable". Note that "gradient" can be a Tensor, an IndexedSlices, or None if there is no gradient for the given variable. In this case the gradient would be an IndexedSlices object.
+
+**apply_gradients** - Apply gradients to variables. This is the second part of minimize(). It returns an Operation that applies gradients.
+
+How it can be used-
+
+ 
+
+1. The optimizer file can be downloaded and added to the source code directory. 
+2. Import the class in the model file. The model should be using Horovod distributed optimizer. 
+3. Create an optimizer object and wrap it around it and call compute_gradients method. 
+4. Call Sparse to dense method to convert the tensors to dense
+5. Call apply gradients
+
+ 
+ 
+*Use Cases –*
+ 
+The optimizer could be used with any model using an optimizer. For example, I used the optimizer with BERT and MNIST. I am working integrating it with Resnet.
+ 
+*Further steps-*
+ 
+
+1. *Optimizing Thresholding *I am going through a couple of research papers that suggest optimal way of finding threshold. I am trying to implement e sampling to reduce top-k selection time. Where I plan to sample only 0.1% to 1% of the gradients and perform top-k selection on the samples to estimate the threshold for the entire population. If the number of gradients exceeding the threshold is far more than expected, a precise threshold is calculated from the already-selected gradients. Hierarchically calculating the threshold significantly reduces top-k selection time. This would reduce the overall training time and still help maintain the accuracy.
+2. Conduct experiments on BERT pre training 32 nodes.
+
+
+
