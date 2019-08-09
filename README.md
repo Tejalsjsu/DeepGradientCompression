@@ -54,6 +54,7 @@ Multi Node - MNIST 2 nodes
  The Library –
  
 DeepGradientCompression optimizer wraps around tf.train.optimizer, which is the base class for optimizers. It overrides methods compute_gradients and apply_gradients. 
+
 **compute_gradients** – gradients are computed using this method. It returns a list of (gradient, variable) pairs where "gradient" is the gradient for "variable". Note that "gradient" can be a Tensor, an IndexedSlices, or None if there is no gradient for the given variable. In this case the gradient would be an IndexedSlices object.
 
 **apply_gradients** - Apply gradients to variables. This is the second part of minimize(). It returns an Operation that applies gradients.
