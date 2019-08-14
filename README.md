@@ -78,7 +78,7 @@ The optimizer could be used with any model using an optimizer. For example, I us
 *Further steps-*
  
 
-1. *Optimizing Thresholding *I am going through a couple of research papers that suggest optimal way of finding threshold. I am trying to implement e sampling to reduce top-k selection time. Where I plan to sample only 0.1% to 1% of the gradients and perform top-k selection on the samples to estimate the threshold for the entire population. If the number of gradients exceeding the threshold is far more than expected, a precise threshold is calculated from the already-selected gradients. Hierarchically calculating the threshold significantly reduces top-k selection time. This would reduce the overall training time and still help maintain the accuracy.
+1. Optimizing Thresholding - I am going through a couple of research papers that suggest optimal way of finding threshold. I am trying to implement e sampling to reduce top-k selection time. Where I plan to sample only 0.1% to 1% of the gradients and perform top-k selection on the samples to estimate the threshold for the entire population. If the number of gradients exceeding the threshold is far more than expected, a precise threshold is calculated from the already-selected gradients. Hierarchically calculating the threshold significantly reduces top-k selection time. This would reduce the overall training time and still help maintain the accuracy.
 2. Conduct experiments on BERT pre training 32 nodes.
 
 
